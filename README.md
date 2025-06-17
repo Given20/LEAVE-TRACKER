@@ -2,16 +2,16 @@
 
 ## Overview
 
-The **LEAVE-TRACKER** is a simple web-based leave management system designed to allow employees to submit leave requests and managers to approve or disapprove them. Built with Node.js, Express, Bootstrap, and jQuery, this application provides a modern user interface and basic backend functionality to manage leave requests in real-time. The system uses an in-memory database for simplicity, storing data during the server's runtime.
+The **LEAVE-TRACKER** is a simple web-based leave management system designed to allow employees to submit leave requests and managers to approve or disapprove them. Built with Node.js, Express, jQuery Mobile, and jQuery, this application provides a mobile-optimized, touch-friendly user interface and basic backend functionality to manage leave requests in real-time. The system uses an in-memory database for simplicity, storing data during the server's runtime.
 
-This project was updated as of June 17, 2025.
+This project was updated as of 08:23 PM SAST, June 17, 2025.
 
 ## Features
 
 - **Employee Interface**: Submit leave requests with employee name, leave type, start date, and end date.
 - **Manager Dashboard**: View pending leave requests and approve or disapprove them.
 - **Real-Time Updates**: Refresh lists to see the latest status of leave requests.
-- **Modern UI**: Utilizes Bootstrap 5 for a responsive and professional design.
+- **Modern UI**: Utilizes jQuery Mobile for a responsive, touch-optimized design.
 - **Validation**: Ensures end dates are after start dates and all fields are filled.
 
 ## Prerequisites
