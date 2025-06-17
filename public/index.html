@@ -9,19 +9,19 @@
 </head>
 <body>
   <div data-role="page" id="home">
-    <div data-role="header" data-theme="a">
+    <div data-role="header" class="apple-header">
       <h1 style="margin: 0;">Leave Tracker</h1>
-      <a href="/dashboard" class="ui-btn ui-btn-right" data-transition="slide" data-ajax="false" data-theme="a">Manager Dashboard</a>
+      <a href="/dashboard" class="ui-btn apple-btn" data-transition="slide" data-ajax="false">Manager Dashboard</a>
     </div>
-    <div data-role="content" class="clean-content">
-      <div class="leave-section">
-        <h2 class="section-title">Submit Leave Request</h2>
+    <div data-role="content" class="apple-content">
+      <div class="apple-section">
+        <h2 class="apple-title">Submit Leave Request</h2>
         <form id="leaveForm">
-          <div data-role="fieldcontain">
+          <div class="apple-field">
             <label for="employeeName">Employee Name</label>
             <input type="text" name="employeeName" id="employeeName" placeholder="Enter your name" required>
           </div>
-          <div data-role="fieldcontain">
+          <div class="apple-field">
             <label for="leaveType">Leave Type</label>
             <select name="leaveType" id="leaveType" data-native-menu="false" required>
               <option value="">Select Leave Type</option>
@@ -30,24 +30,24 @@
               <option value="Personal">Personal</option>
             </select>
           </div>
-          <div data-role="fieldcontain">
+          <div class="apple-field">
             <label for="startDate">Start Date</label>
             <input type="date" name="startDate" id="startDate" required>
           </div>
-          <div data-role="fieldcontain">
+          <div class="apple-field">
             <label for="endDate">End Date</label>
             <input type="date" name="endDate" id="endDate" required>
           </div>
-          <a href="#" id="submitButton" data-role="button" data-theme="b" class="ui-btn">Submit</a>
+          <a href="#" id="submitButton" class="ui-btn apple-btn apple-primary">Submit</a>
         </form>
       </div>
-      <div class="leave-section">
-        <h2 class="section-title">My Leave Requests</h2>
-        <ul id="leaveList" data-role="listview" data-inset="true"></ul>
-        <a href="#" id="refreshStatus" data-role="button" data-theme="b" class="ui-btn">Refresh</a>
+      <div class="apple-section">
+        <h2 class="apple-title">My Leave Requests</h2>
+        <ul id="leaveList" data-role="listview" data-inset="true" class="apple-list"></ul>
+        <a href="#" id="refreshStatus" class="ui-btn apple-btn apple-primary">Refresh</a>
       </div>
     </div>
-    <div data-role="footer" data-theme="a" class="clean-footer">
+    <div data-role="footer" class="apple-footer">
       <h4>© 2025 Leave Tracker | Time: <span id="currentTime"></span></h4>
     </div>
   </div>

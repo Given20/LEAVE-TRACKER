@@ -1,92 +1,138 @@
 body {
-  background-color: #f8f9fa;
-  font-family: Arial, sans-serif;
+  background-color: #f7f7f7;
+  font-family: Arial, sans-serif; /* Simulating San Francisco */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.clean-content {
-  padding: 15px;
-}
-
-.leave-section {
-  margin-bottom: 20px;
+.apple-header {
   background-color: #fff;
-  border-radius: 5px;
-  padding: 15px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #e5e5e5;
+  padding: 10px 15px;
+  text-align: center;
 }
 
-.section-title {
+.apple-header h1 {
   font-size: 1.5em;
-  color: #003087;
-  margin-bottom: 15px;
-  font-weight: bold;
+  font-weight: 600;
+  color: #000;
+  margin: 0;
 }
 
-.ui-field-contain {
-  margin-bottom: 10px;
-}
-
-.ui-select {
-  margin-top: 5px;
-}
-
-.ui-btn {
-  margin: 5px 0;
+.apple-btn {
+  background-color: #007AFF;
+  border: none;
+  border-radius: 12px;
+  color: #fff;
   font-size: 1em;
   padding: 8px 16px;
+  text-shadow: none;
+  transition: background-color 0.2s ease;
 }
 
-.ui-btn-b {
-  background-color: #28a745;
-  border-color: #28a745;
-  color: #fff;
-}
-.ui-btn-b:hover {
-  background-color: #218838;
+.apple-btn:hover {
+  background-color: #005BB5;
 }
 
-.ui-btn-e {
-  background-color: #dc3545;
-  border-color: #dc3545;
-  color: #fff;
-}
-.ui-btn-e:hover {
-  background-color: #c82333;
+.apple-primary {
+  background-color: #007AFF;
 }
 
-.ui-listview {
+.apple-danger {
+  background-color: #FF2D55;
+}
+
+.apple-danger:hover {
+  background-color: #CC2B4A;
+}
+
+.apple-content {
+  padding: 20px;
+}
+
+.apple-section {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.apple-title {
+  font-size: 1.4em;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.apple-field {
+  margin-bottom: 15px;
+}
+
+.apple-field label {
+  font-size: 0.9em;
+  color: #6e6e6e;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.apple-field input,
+.apple-field select {
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 1em;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #fff;
+  transition: border-color 0.2s ease;
+}
+
+.apple-field input:focus,
+.apple-field select:focus {
+  border-color: #007AFF;
+  outline: none;
+}
+
+.apple-list {
   margin: 10px 0;
 }
 
-.ui-listview li {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+.apple-list li {
+  padding: 15px;
+  border-bottom: 1px solid #e5e5e5;
+  background-color: #fff;
+  border-radius: 8px;
+  margin-bottom: 10px;
 }
 
-.ui-listview li h3 {
+.apple-list li h3 {
   font-size: 1.2em;
-  color: #003087;
+  font-weight: 600;
+  color: #000;
   margin: 0 0 5px;
 }
 
-.ui-listview li p {
+.apple-list li p {
   font-size: 0.9em;
-  color: #555;
+  color: #6e6e6e;
   margin: 0;
 }
 
-.ui-listview li p strong {
+.apple-list li p strong {
   color: #333;
 }
 
-.clean-footer {
-  text-align: center;
+.apple-footer {
+  background-color: #f7f7f7;
+  border-top: 1px solid #e5e5e5;
   padding: 10px;
-  background-color: #003087;
-  color: #fff;
+  text-align: center;
 }
 
-.clean-footer h4 {
-  margin: 0;
+.apple-footer h4 {
   font-size: 0.9em;
+  color: #6e6e6e;
+  margin: 0;
 }

@@ -9,18 +9,18 @@
 </head>
 <body>
   <div data-role="page" id="dashboard">
-    <div data-role="header" data-theme="a">
+    <div data-role="header" class="apple-header">
       <h1 style="margin: 0;">Manager Dashboard</h1>
-      <a href="/" class="ui-btn ui-btn-left" data-transition="slide" data-direction="reverse" data-ajax="false" data-theme="a">Back</a>
+      <a href="/" class="ui-btn apple-btn" data-transition="slide" data-direction="reverse" data-ajax="false">Back</a>
     </div>
-    <div data-role="content" class="clean-content">
-      <div class="leave-section">
-        <h2 class="section-title">Pending Leave Requests</h2>
-        <ul id="pendingList" data-role="listview" data-inset="true"></ul>
-        <a href="#" id="refreshDashboard" data-role="button" data-theme="b" class="ui-btn">Refresh</a>
+    <div data-role="content" class="apple-content">
+      <div class="apple-section">
+        <h2 class="apple-title">Pending Leave Requests</h2>
+        <ul id="pendingList" data-role="listview" data-inset="true" class="apple-list"></ul>
+        <a href="#" id="refreshDashboard" class="ui-btn apple-btn apple-primary">Refresh</a>
       </div>
     </div>
-    <div data-role="footer" data-theme="a" class="clean-footer">
+    <div data-role="footer" class="apple-footer">
       <h4>© 2025 Leave Tracker | Time: <span id="currentTime"></span></h4>
     </div>
   </div>
@@ -60,8 +60,8 @@
                     <h3>${request.employeeName}</h3>
                     <p><strong>Type:</strong> ${request.leaveType}</p>
                     <p><strong>Dates:</strong> ${request.startDate} to ${request.endDate}</p>
-                    <a href="#" class="ui-btn ui-btn-b ui-mini approve-btn" data-id="${request.id}" data-status="Approved">Approve</a>
-                    <a href="#" class="ui-btn ui-btn-e ui-mini reject-btn" data-id="${request.id}" data-status="Rejected">Disapprove</a>
+                    <a href="#" class="ui-btn apple-btn apple-primary approve-btn" data-id="${request.id}" data-status="Approved">Approve</a>
+                    <a href="#" class="ui-btn apple-btn apple-danger reject-btn" data-id="${request.id}" data-status="Rejected">Disapprove</a>
                   </li>
                 `).listview('refresh');
               });
