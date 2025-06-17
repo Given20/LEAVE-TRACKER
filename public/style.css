@@ -1,46 +1,92 @@
 body {
   background-color: #f8f9fa;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  font-family: Arial, sans-serif;
 }
 
-.container {
-  flex: 1;
+.clean-content {
+  padding: 15px;
 }
 
-.leave-form, .leave-status {
-  border: none;
-  border-radius: 0.5rem;
+.leave-section {
+  margin-bottom: 20px;
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.card-header {
-  border-radius: 0.5rem 0.5rem 0 0;
+.section-title {
+  font-size: 1.5em;
+  color: #003087;
+  margin-bottom: 15px;
+  font-weight: bold;
 }
 
-.btn-success {
+.ui-field-contain {
+  margin-bottom: 10px;
+}
+
+.ui-select {
+  margin-top: 5px;
+}
+
+.ui-btn {
+  margin: 5px 0;
+  font-size: 1em;
+  padding: 8px 16px;
+}
+
+.ui-btn-b {
   background-color: #28a745;
   border-color: #28a745;
+  color: #fff;
 }
-.btn-success:hover {
+.ui-btn-b:hover {
   background-color: #218838;
-  border-color: #1e7e34;
 }
 
-.btn-danger {
+.ui-btn-e {
   background-color: #dc3545;
   border-color: #dc3545;
+  color: #fff;
 }
-.btn-danger:hover {
+.ui-btn-e:hover {
   background-color: #c82333;
-  border-color: #bd2130;
 }
 
-.footer {
-  margin-top: auto;
+.ui-listview {
+  margin: 10px 0;
 }
 
-/* Adjust heading sizes */
-.h4 {
-  font-size: 1.25rem; /* Slightly smaller than default h2 (1.5rem) */
+.ui-listview li {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.ui-listview li h3 {
+  font-size: 1.2em;
+  color: #003087;
+  margin: 0 0 5px;
+}
+
+.ui-listview li p {
+  font-size: 0.9em;
+  color: #555;
+  margin: 0;
+}
+
+.ui-listview li p strong {
+  color: #333;
+}
+
+.clean-footer {
+  text-align: center;
+  padding: 10px;
+  background-color: #003087;
+  color: #fff;
+}
+
+.clean-footer h4 {
+  margin: 0;
+  font-size: 0.9em;
 }

@@ -4,133 +4,123 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Leave Tracker - Employee</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <nav class="navbar navbar-dark bg-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">Leave Tracker</a>
-      <a href="/dashboard" class="btn btn-primary">Manager Dashboard</a>
+  <div data-role="page" id="home">
+    <div data-role="header" data-theme="a">
+      <h1 style="margin: 0;">Leave Tracker</h1>
+      <a href="/dashboard" class="ui-btn ui-btn-right" data-transition="slide" data-ajax="false" data-theme="a">Manager Dashboard</a>
     </div>
-  </nav>
-
-  <div class="container mt-4">
-    <div class="card leave-form">
-      <div class="card-header bg-primary text-white">
-        <h2 class="h4">Submit Leave Request</h2> <!-- Reduced to h4 size -->
-      </div>
-      <div class="card-body">
+    <div data-role="content" class="clean-content">
+      <div class="leave-section">
+        <h2 class="section-title">Submit Leave Request</h2>
         <form id="leaveForm">
-          <div class="mb-3">
-            <label for="employeeName" class="form-label">Employee Name</label>
-            <input type="text" class="form-control" id="employeeName" placeholder="Enter your name" required>
+          <div data-role="fieldcontain">
+            <label for="employeeName">Employee Name</label>
+            <input type="text" name="employeeName" id="employeeName" placeholder="Enter your name" required>
           </div>
-          <div class="mb-3">
-            <label for="leaveType" class="form-label">Leave Type</label>
-            <select class="form-select" id="leaveType" required>
+          <div data-role="fieldcontain">
+            <label for="leaveType">Leave Type</label>
+            <select name="leaveType" id="leaveType" data-native-menu="false" required>
               <option value="">Select Leave Type</option>
               <option value="Vacation">Vacation</option>
               <option value="Sick">Sick</option>
               <option value="Personal">Personal</option>
             </select>
           </div>
-          <div class="mb-3">
-            <label for="startDate" class="form-label">Start Date</label>
-            <input type="date" class="form-control" id="startDate" required>
+          <div data-role="fieldcontain">
+            <label for="startDate">Start Date</label>
+            <input type="date" name="startDate" id="startDate" required>
           </div>
-          <div class="mb-3">
-            <label for="endDate" class="form-label">End Date</label>
-            <input type="date" class="form-control" id="endDate" required>
+          <div data-role="fieldcontain">
+            <label for="endDate">End Date</label>
+            <input type="date" name="endDate" id="endDate" required>
           </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <a href="#" id="submitButton" data-role="button" data-theme="b" class="ui-btn">Submit</a>
         </form>
       </div>
+      <div class="leave-section">
+        <h2 class="section-title">My Leave Requests</h2>
+        <ul id="leaveList" data-role="listview" data-inset="true"></ul>
+        <a href="#" id="refreshStatus" data-role="button" data-theme="b" class="ui-btn">Refresh</a>
+      </div>
     </div>
-
-    <div class="card leave-status mt-4">
-      <div class="card-header bg-primary text-white">
-        <h2 class="h4">My Leave Requests</h2> <!-- Reduced to h4 size -->
-      </div>
-      <div class="card-body">
-        <ul id="leaveList" class="list-group"></ul>
-        <button id="refreshStatus" class="btn btn-outline-primary mt-3">Refresh</button>
-      </div>
+    <div data-role="footer" data-theme="a" class="clean-footer">
+      <h4>© 2025 Leave Tracker | Time: <span id="currentTime"></span></h4>
     </div>
   </div>
 
-  <footer class="footer bg-dark text-white text-center py-2 mt-4">
-    <p>© 2025 Leave Tracker | Time: <span id="currentTime"></span></p>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+  <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
   <script>
-  $(document).ready(function() {
-    // Submit Leave Request with Validation
-    $('#leaveForm').on('submit', function(e) {
-      e.preventDefault();
-      const start = new Date($('#startDate').val());
-      const end = new Date($('#endDate').val());
-      if (start > end) {
-        alert('End date must be after start date!');
-        return;
-      }
-      const formData = {
-        employeeName: $('#employeeName').val(),
-        leaveType: $('#leaveType').val(),
-        startDate: $('#startDate').val(),
-        endDate: $('#endDate').val()
-      };
-      $.ajax({
-        url: '/api/submit-leave', // Reverted to local endpoint
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(formData),
-        success: function(response) {
-          alert('Leave request submitted successfully!');
-          $('#leaveForm')[0].reset();
-          refreshLeaveStatus();
-        },
-        error: function(xhr, status, error) {
-          const errorMsg = xhr.responseJSON ? xhr.responseJSON.error : 'An unexpected error occurred';
-          alert('Error submitting request: ' + errorMsg);
+    $(document).on('pagecreate', '#home', function() {
+      // Submit Leave Request with Validation
+      $('#submitButton').on('click', function(e) {
+        e.preventDefault();
+        const start = new Date($('#startDate').val());
+        const end = new Date($('#endDate').val());
+        if (start > end) {
+          alert('End date must be after start date!');
+          return;
         }
-      });
-    });
-
-    // Refresh Leave Status
-    $('#refreshStatus').on('click', function() {
-      refreshLeaveStatus();
-    });
-
-    // Update Current Time
-    function updateTime() {
-      const now = new Date().toLocaleTimeString('en-US', { timeZone: 'Africa/Johannesburg' });
-      $('#currentTime').text(now);
-    }
-    setInterval(updateTime, 1000);
-    updateTime();
-
-    // Refresh Leave Status
-    function refreshLeaveStatus() {
-      $.get('/api/leave-requests', function(data) { // Reverted to local endpoint
-        const $list = $('#leaveList').empty();
-        data.forEach(request => {
-          $list.append(`
-            <li class="list-group-item">
-              <h5>${request.employeeName}</h5>
-              <p>Type: ${request.leaveType}</p>
-              <p>Dates: ${request.startDate} to ${request.endDate}</p>
-              <p>Status: ${request.status} ${request.approvedBy ? `by ${request.approvedBy}` : ''}</p>
-              <p>Submitted: ${new Date(request.dateSubmitted).toLocaleString()}</p>
-            </li>
-          `);
+        const formData = {
+          employeeName: $('#employeeName').val(),
+          leaveType: $('#leaveType').val(),
+          startDate: $('#startDate').val(),
+          endDate: $('#endDate').val()
+        };
+        $.ajax({
+          url: '/api/submit-leave',
+          method: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify(formData),
+          success: function(response) {
+            alert('Leave request submitted successfully!');
+            $('#leaveForm')[0].reset();
+            refreshLeaveStatus();
+          },
+          error: function(xhr, status, error) {
+            const errorMsg = xhr.responseJSON ? xhr.responseJSON.error : 'An unexpected error occurred';
+            alert('Error submitting request: ' + errorMsg);
+          }
         });
       });
-    }
-    refreshLeaveStatus();
-  });
-</script>
+
+      // Refresh Leave Status
+      $('#refreshStatus').on('click', function(e) {
+        e.preventDefault();
+        refreshLeaveStatus();
+      });
+
+      // Update Current Time
+      function updateTime() {
+        const now = new Date().toLocaleTimeString('en-US', { timeZone: 'Africa/Johannesburg' });
+        $('#currentTime').text(now);
+      }
+      setInterval(updateTime, 1000);
+      updateTime();
+
+      // Refresh Leave Status
+      function refreshLeaveStatus() {
+        $.get('/api/leave-requests', function(data) {
+          const $list = $('#leaveList').empty();
+          data.forEach(request => {
+            $list.append(`
+              <li>
+                <h3>${request.employeeName}</h3>
+                <p><strong>Type:</strong> ${request.leaveType}</p>
+                <p><strong>Dates:</strong> ${request.startDate} to ${request.endDate}</p>
+                <p><strong>Status:</strong> ${request.status} ${request.approvedBy ? 'by ' + request.approvedBy : ''}</p>
+                <p><strong>Submitted:</strong> ${new Date(request.dateSubmitted).toLocaleString()}</p>
+              </li>
+            `).listview('refresh');
+          });
+        });
+      }
+      refreshLeaveStatus();
+    });
+  </script>
 </body>
 </html>

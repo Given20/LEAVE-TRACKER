@@ -4,111 +4,106 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Leave Tracker - Dashboard</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <nav class="navbar navbar-dark bg-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">Manager Dashboard</a>
-      <a href="/" class="btn btn-outline-light" data-transition="slide" data-direction="reverse">Back</a>
+  <div data-role="page" id="dashboard">
+    <div data-role="header" data-theme="a">
+      <h1 style="margin: 0;">Manager Dashboard</h1>
+      <a href="/" class="ui-btn ui-btn-left" data-transition="slide" data-direction="reverse" data-ajax="false" data-theme="a">Back</a>
     </div>
-  </nav>
-
-  <div class="container mt-4">
-    <div class="card leave-status">
-      <div class="card-header bg-primary text-white">
-        <h2 class="h4">Pending Leave Requests</h2> <!-- Reduced to h4 size -->
+    <div data-role="content" class="clean-content">
+      <div class="leave-section">
+        <h2 class="section-title">Pending Leave Requests</h2>
+        <ul id="pendingList" data-role="listview" data-inset="true"></ul>
+        <a href="#" id="refreshDashboard" data-role="button" data-theme="b" class="ui-btn">Refresh</a>
       </div>
-      <div class="card-body">
-        <ul id="pendingList" class="list-group"></ul>
-        <button id="refreshDashboard" class="btn btn-outline-primary mt-3">Refresh</button>
-      </div>
+    </div>
+    <div data-role="footer" data-theme="a" class="clean-footer">
+      <h4>© 2025 Leave Tracker | Time: <span id="currentTime"></span></h4>
     </div>
   </div>
 
-  <footer class="footer bg-dark text-white text-center py-2 mt-4">
-    <p>© 2025 Leave Tracker | Time: <span id="currentTime"></span></p>
-  </footer>
+  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+  <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+  <script>
+    $(document).on('pagecreate', '#dashboard', function() {
+      // Refresh Dashboard
+      $('#refreshDashboard').on('click', function(e) {
+        e.preventDefault();
+        refreshDashboard();
+      });
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-  $(document).ready(function() {
-    // Refresh Dashboard
-    $('#refreshDashboard').on('click', function() {
+      // Update Current Time
+      function updateTime() {
+        const now = new Date().toLocaleTimeString('en-US', { timeZone: 'Africa/Johannesburg' });
+        $('#currentTime').text(now);
+      }
+      setInterval(updateTime, 1000);
+      updateTime();
+
+      // Refresh Dashboard
+      function refreshDashboard() {
+        $.ajax({
+          url: '/api/leave-requests',
+          method: 'GET',
+          success: function(data) {
+            const $list = $('#pendingList').empty();
+            const pendingRequests = data.filter(r => r.status === 'Pending');
+            if (pendingRequests.length === 0) {
+              $list.append('<li>No pending requests.</li>').listview('refresh');
+            } else {
+              pendingRequests.forEach(request => {
+                $list.append(`
+                  <li>
+                    <h3>${request.employeeName}</h3>
+                    <p><strong>Type:</strong> ${request.leaveType}</p>
+                    <p><strong>Dates:</strong> ${request.startDate} to ${request.endDate}</p>
+                    <a href="#" class="ui-btn ui-btn-b ui-mini approve-btn" data-id="${request.id}" data-status="Approved">Approve</a>
+                    <a href="#" class="ui-btn ui-btn-e ui-mini reject-btn" data-id="${request.id}" data-status="Rejected">Disapprove</a>
+                  </li>
+                `).listview('refresh');
+              });
+
+              $('.approve-btn').on('click', function(e) {
+                e.preventDefault();
+                if (confirm('Are you sure you want to approve this request?')) {
+                  updateStatus($(this).data('id'), $(this).data('status'), 'Manager');
+                }
+              });
+              $('.reject-btn').on('click', function(e) {
+                e.preventDefault();
+                if (confirm('Are you sure you want to disapprove this request?')) {
+                  updateStatus($(this).data('id'), $(this).data('status'), 'Manager');
+                }
+              });
+            }
+          },
+          error: function(xhr, status, error) {
+            $('#pendingList').empty().append('<li>Error loading requests. Check console for details.</li>').listview('refresh');
+          }
+        });
+      }
+
+      function updateStatus(id, status, approvedBy) {
+        $.ajax({
+          url: '/api/approve-leave',
+          method: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({ id, status, approvedBy }),
+          success: function() {
+            alert('Status updated to ' + status.toLowerCase() + '!');
+            refreshDashboard();
+          },
+          error: function(xhr) {
+            alert('Error: ' + (xhr.responseJSON ? xhr.responseJSON.error : 'An unexpected error occurred'));
+          }
+        });
+      }
+
       refreshDashboard();
     });
-
-    // Update Current Time
-    function updateTime() {
-      const now = new Date().toLocaleTimeString('en-US', { timeZone: 'Africa/Johannesburg' });
-      $('#currentTime').text(now);
-    }
-    setInterval(updateTime, 1000);
-    updateTime();
-
-    // Refresh Dashboard
-    function refreshDashboard() {
-      $.ajax({
-        url: '/api/leave-requests', // Reverted to local endpoint
-        method: 'GET',
-        success: function(data) {
-          console.log('Fetched data:', data);
-          const $list = $('#pendingList').empty();
-          const pendingRequests = data.filter(r => r.status === 'Pending');
-          if (pendingRequests.length === 0) {
-            $list.append('<li class="list-group-item">No pending requests.</li>');
-          } else {
-            pendingRequests.forEach(request => {
-              $list.append(`
-                <li class="list-group-item">
-                  <h5>${request.employeeName}</h5>
-                  <p>Type: ${request.leaveType}</p>
-                  <p>Dates: ${request.startDate} to ${request.endDate}</p>
-                  <button class="btn btn-success btn-sm approve-btn me-2" data-id="${request.id}" data-status="Approved">Approve</button>
-                  <button class="btn btn-danger btn-sm reject-btn" data-id="${request.id}" data-status="Rejected">Disapprove</button>
-                </li>
-              `);
-            });
-
-            $('.approve-btn').off('click').on('click', function() {
-              if (confirm('Are you sure you want to approve this request?')) {
-                updateStatus($(this).data('id'), $(this).data('status'), 'Manager');
-              }
-            });
-            $('.reject-btn').off('click').on('click', function() {
-              if (confirm('Are you sure you want to disapprove this request?')) {
-                updateStatus($(this).data('id'), $(this).data('status'), 'Manager');
-              }
-            });
-          }
-        },
-        error: function(xhr, status, error) {
-          console.log('Error fetching requests:', error, 'Status:', status, 'Response:', xhr.responseText);
-          $('#pendingList').empty().append('<li class="list-group-item">Error loading requests. Check console for details.</li>');
-        }
-      });
-    }
-
-    function updateStatus(id, status, approvedBy) {
-      $.ajax({
-        url: '/api/approve-leave', // Reverted to local endpoint
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({ id, status, approvedBy }),
-        success: function() {
-          alert('Status updated to ' + status.toLowerCase() + '!');
-          refreshDashboard();
-        },
-        error: function(xhr) {
-          alert('Error: ' + (xhr.responseJSON ? xhr.responseJSON.error : 'An unexpected error occurred'));
-        }
-      });
-    }
-
-    refreshDashboard(); // Initial load
-  });
-</script>
+  </script>
 </body>
 </html>
