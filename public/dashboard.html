@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Leave Tracker - Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Manager Dashboard</a>
+      <a href="/" class="btn btn-outline-light" data-transition="slide" data-direction="reverse">Back</a>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <div class="card leave-status">
+      <div class="card-header bg-primary text-white">
+        <h2 class="h4">Pending Leave Requests</h2> <!-- Reduced to h4 size -->
+      </div>
+      <div class="card-body">
+        <ul id="pendingList" class="list-group"></ul>
+        <button id="refreshDashboard" class="btn btn-outline-primary mt-3">Refresh</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer bg-dark text-white text-center py-2 mt-4">
+    <p>© 2025 Leave Tracker | Time: <span id="currentTime"></span></p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    // Refresh Dashboard
+    $('#refreshDashboard').on('click', function() {
+      refreshDashboard();
+    });
+
+    // Update Current Time
+    function updateTime() {
+      const now = new Date().toLocaleTimeString('en-US', { timeZone: 'Africa/Johannesburg' });
+      $('#currentTime').text(now);
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    // Refresh Dashboard
+    function refreshDashboard() {
+      $.ajax({
+        url: '/api/leave-requests', // Reverted to local endpoint
+        method: 'GET',
+        success: function(data) {
+          console.log('Fetched data:', data);
+          const $list = $('#pendingList').empty();
+          const pendingRequests = data.filter(r => r.status === 'Pending');
+          if (pendingRequests.length === 0) {
+            $list.append('<li class="list-group-item">No pending requests.</li>');
+          } else {
+            pendingRequests.forEach(request => {
+              $list.append(`
+                <li class="list-group-item">
+                  <h5>${request.employeeName}</h5>
+                  <p>Type: ${request.leaveType}</p>
+                  <p>Dates: ${request.startDate} to ${request.endDate}</p>
+                  <button class="btn btn-success btn-sm approve-btn me-2" data-id="${request.id}" data-status="Approved">Approve</button>
+                  <button class="btn btn-danger btn-sm reject-btn" data-id="${request.id}" data-status="Rejected">Disapprove</button>
+                </li>
+              `);
+            });
+
+            $('.approve-btn').off('click').on('click', function() {
+              if (confirm('Are you sure you want to approve this request?')) {
+                updateStatus($(this).data('id'), $(this).data('status'), 'Manager');
+              }
+            });
+            $('.reject-btn').off('click').on('click', function() {
+              if (confirm('Are you sure you want to disapprove this request?')) {
+                updateStatus($(this).data('id'), $(this).data('status'), 'Manager');
+              }
+            });
+          }
+        },
+        error: function(xhr, status, error) {
+          console.log('Error fetching requests:', error, 'Status:', status, 'Response:', xhr.responseText);
+          $('#pendingList').empty().append('<li class="list-group-item">Error loading requests. Check console for details.</li>');
+        }
+      });
+    }
+
+    function updateStatus(id, status, approvedBy) {
+      $.ajax({
+        url: '/api/approve-leave', // Reverted to local endpoint
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ id, status, approvedBy }),
+        success: function() {
+          alert('Status updated to ' + status.toLowerCase() + '!');
+          refreshDashboard();
+        },
+        error: function(xhr) {
+          alert('Error: ' + (xhr.responseJSON ? xhr.responseJSON.error : 'An unexpected error occurred'));
+        }
+      });
+    }
+
+    refreshDashboard(); // Initial load
+  });
+</script>
+</body>
+</html>
